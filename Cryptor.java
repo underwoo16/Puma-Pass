@@ -1,6 +1,7 @@
 /*
+Cryptor class
 
-
+06/18/2015
 */
 
 import javax.crypto.*;
@@ -17,15 +18,11 @@ public class Cryptor
       this.setKey(userKey);
    } // end EVC
    
-   public Cryptor()
-   {
-      // Its best not to use this constructor. If the other methods are called with a null/invalid key there will be "issues".
-      this.key = null;
-   } // end DVC
-   
    public void setKey(final String userKey) throws Exception
    {
       // preconditions
+      if (userKey == null || userKey.isEmpty())
+         throw new RuntimeException("Invalid/Null userKey String passed in.");
       
       /* 
          The key must be 128/182/256 bits to work with AES.
@@ -40,6 +37,10 @@ public class Cryptor
    
    public String encrypt(final String data) throws Exception
    {
+      // preconditions
+      if (data == null || data.isEmpty())
+         throw new RuntimeException("Invalid/Null data String passed in.");
+      
       // Create the Cipher object and set it to encrypt using the master key.
       Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
       cipher.init(Cipher.ENCRYPT_MODE, this.key);
@@ -59,6 +60,9 @@ public class Cryptor
    
    public String decrypt(final String data) throws Exception
    {
+      // preconditions
+      if (data == null || data.isEmpty())
+         throw new RuntimeException("Invalid/Null data String passed in.");
       
       try
       {
