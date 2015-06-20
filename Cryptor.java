@@ -90,4 +90,28 @@ public class Cryptor
       
    } // end decrypt
    
+   public String[] encryptArray(final String[] data) throws Exception
+   {
+      String[] result = new String[data.length];
+      
+      for (int x = 0; x < data.length; x++)
+      {
+         result[x] = encrypt(data[x]);
+      }
+      
+      return result;
+   } // end encryptArray
+   
+   public String[] decryptArray(final String[] data, final String key) throws Exception
+   {
+      String[] result = new String[data.length];
+      
+      for (int x = 0; x < data.length; x++)
+      {
+         result[x] = decrypt(data[x]);
+      }
+      
+      return result;
+   } // end decryptArray
+   
 } // end class Cryptor
