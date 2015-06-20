@@ -8,7 +8,7 @@
  * @author Chandler Underwood
  *
  */
-class PassGenTest {
+public class PassGenTest {
 
 	/**
 	 * @param args

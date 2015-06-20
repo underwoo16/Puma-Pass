@@ -98,7 +98,7 @@ public class RandomPassGen
 		for(int i=0; i<this.passLength; i++)
 		{
 			int randNum = rng.nextInt(charsToUse.length());
-			pwBuilder.append(charsToUse.charAt(randNum));	
+			pwBuilder.append(charsToUse.charAt(randNum));
 		}
 		
 		//return the beautiful password
