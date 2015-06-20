@@ -102,7 +102,7 @@ public class Cryptor
       return result;
    } // end encryptArray
    
-   public String[] decryptArray(final String[] data, final String key) throws Exception
+   public String[] decryptArray(final String[] data) throws Exception
    {
       String[] result = new String[data.length];
       
