@@ -4,6 +4,7 @@
 */
 
 import java.io.*;
+import java.nio.file.*;
 import java.util.Scanner;
 
 public class FileUtil
@@ -28,6 +29,7 @@ public class FileUtil
          data[x] = fin.nextLine();
       }
       
+      fin.close();
       return data;
    }
    
@@ -48,6 +50,7 @@ public class FileUtil
          fin.println(data[x]);
       }
       
+      fin.close();
    }
    
    /**
@@ -61,13 +64,14 @@ public class FileUtil
    }
    
    /**
-     * Delete a save file.
+     * Delete a save file. Can also delete empty directories.
      * @param filename name of the file to be deleted
      * @return returns true if the deletion was successful
     */
    public static boolean deleteFile(final String filename)
    {
-      return false;
+      File file = new File(filename);
+      return file.delete();
    }
    
 } // end class FileUtil
