@@ -6,6 +6,7 @@
 import java.io.*;
 import java.nio.file.*;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class FileUtil
 {
@@ -54,13 +55,27 @@ public class FileUtil
    }
    
    /**
-     * Reads in all the filenames of save files.
+     * Reads in all the filenames of save files in the /Saves folder.
      * @return a string array containing the filenames
     */
-   public static String[] readFilenames()
+   public static String[] readSaveFilenames()
    {
-      // CANNOT IMPLEMENT UNTIL A NAMING SCHEME IS DECIDED
-      return null;
+      ArrayList<String> saveList = new ArrayList<String>();
+      
+      File dir = new File("./Saves");
+      File[] list = dir.listFiles();
+      for (int x = 0; x < list.length; x++)
+      {
+         if (list[x].isFile() && list[x].getName().endsWith(".dat"))
+         {
+            saveList.add(list[x].getName());
+         }         
+      }
+      
+      String[] saves = new String[saveList.size()];
+      saves = saveList.toArray(saves);
+      
+      return saves;
    }
    
    /**
