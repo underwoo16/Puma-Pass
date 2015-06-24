@@ -18,7 +18,7 @@ public class FileUtil
     */
    public static String[] readRecords(final String filename) throws Exception
    {
-      File file = new File(filename);
+      File file = new File("./Saves/" + filename);
       Scanner fin = new Scanner(file);
       
       int recordCount = fin.nextInt();
@@ -40,7 +40,7 @@ public class FileUtil
     */
    public static void writeRecords(final String filename, final String[] data) throws Exception
    {
-      File file = new File(filename);
+      File file = new File("./Saves/" + filename);
       PrintStream fin = new PrintStream(file);
       
       int recordCount = (data.length / 3);
@@ -85,7 +85,7 @@ public class FileUtil
     */
    public static boolean deleteFile(final String filename)
    {
-      File file = new File(filename);
+      File file = new File("./Saves/" + filename);
       return file.delete();
    }
    

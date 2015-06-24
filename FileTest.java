@@ -10,8 +10,15 @@ public class FileTest
    public static void main(String[] args) throws Exception
    {
       
-      /*String[] data = FileUtil.readRecords("input.txt");
-      Cryptor c = new Cryptor("password");
+      String[] data = FileUtil.readRecords("profile1.dat");
+      for (int x = 0; x < data.length; x++)
+      {
+         System.out.println(data[x]);
+      }
+      FileUtil.writeRecords("profile2.dat", data);
+      FileUtil.deleteFile("profile2.dat");
+      
+      /*Cryptor c = new Cryptor("password");
       
       FileUtil.writeRecords("output.txt", c.encryptArray(data));
       FileUtil.writeRecords("output2.txt", c.decryptArray(c.encryptArray(data)));
