@@ -8,6 +8,9 @@
  * @author Chandler Underwood
  *
  */
+import pumaUtils.RandomPassGen;
+
+
 public class PassGenTest {
 
 	/**
