@@ -3,7 +3,7 @@ Cryptor class
 
 06/18/2015
 */
-package pumaUtils;
+package pumaPass.pumaUtils;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;

@@ -3,8 +3,10 @@
 
 */
 
+package pumaPass;
+
 import java.io.*;
-import pumaUtils.FileUtil;
+import pumaPass.pumaUtils.FileUtil;
 
 public class FileTest
 {

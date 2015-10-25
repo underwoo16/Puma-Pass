@@ -3,7 +3,10 @@
 
 */
 
-import pumaUtils.Cryptor;
+package pumaPass;
+
+import pumaPass.pumaUtils.Cryptor;
+import pumaPass.pumaUtils.FileUtil;
 
 public class CipherTest
 {
@@ -35,6 +38,7 @@ public class CipherTest
       {
          System.out.println(temp[x]);
       }
+      /*
       temp = c.decryptArray(temp);
       for (int x = 0; x < temp.length; x++)
       {
@@ -46,7 +50,8 @@ public class CipherTest
       for (int x = 0; x < temp.length; x++)
       {
          System.out.println(temp[x]);
-      }
+      }*/
+      FileUtil.writeRecords("Profile3", temp);
       
    } // end main
    

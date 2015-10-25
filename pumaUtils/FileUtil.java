@@ -2,11 +2,11 @@
  * A collection of methods that deal with file IO.
  * @author Cody Machine
 */
-package pumaUtils;
+package pumaPass.pumaUtils;
 
 
 import java.io.*;
-import java.nio.file.*;
+//import java.nio.file.*;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -20,7 +20,7 @@ public class FileUtil
     */
    public static String[] readRecords(final String filename) throws Exception
    {
-      File file = new File("./Saves/" + filename);
+      File file = new File("PumaPass/Saves/" + filename + ".dat");
       Scanner fin = new Scanner(file);
       
       int recordCount = fin.nextInt();
@@ -42,7 +42,7 @@ public class FileUtil
     */
    public static void writeRecords(final String filename, final String[] data) throws Exception
    {
-      File file = new File("./Saves/" + filename);
+      File file = new File("PumaPass/Saves/" + filename + ".dat");
       PrintStream fin = new PrintStream(file);
       
       int recordCount = (data.length / 3);
@@ -64,7 +64,7 @@ public class FileUtil
    {
       ArrayList<String> saveList = new ArrayList<String>();
       
-      File dir = new File("./Saves");
+      File dir = new File("PumaPass/Saves/");
       File[] list = dir.listFiles();
       for (int x = 0; x < list.length; x++)
       {
@@ -87,7 +87,7 @@ public class FileUtil
     */
    public static boolean deleteFile(final String filename)
    {
-      File file = new File("./Saves/" + filename);
+      File file = new File("PumaPass/Saves/" + filename + ".dat");
       return file.delete();
    }
    

@@ -1,4 +1,4 @@
-package pumaUtils;
+package pumaPass.pumaUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -70,7 +70,7 @@ public class DicewarePassGen
 		this.wordList = new Hashtable<Integer, String>(WORD_LIST_LENGTH);
 
 		//gets a handle on the word list
-		FileInputStream fstream = new FileInputStream(new File("pumaUtils/Resources/wordlist.txt"));
+		FileInputStream fstream = new FileInputStream(new File("PumaPass/pumaUtils/Resources/wordlist.txt"));
 		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 		
 		//reads the lines in, splits them, and puts them in word list hashtable

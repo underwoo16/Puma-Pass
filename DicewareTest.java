@@ -1,5 +1,7 @@
+package pumaPass;
+
 import java.io.IOException;
-import pumaUtils.DicewarePassGen;
+import pumaPass.pumaUtils.DicewarePassGen;
 
 
 /**

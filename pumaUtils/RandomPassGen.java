@@ -1,4 +1,4 @@
-package pumaUtils;
+package pumaPass.pumaUtils;
 
 import java.security.SecureRandom;
 
