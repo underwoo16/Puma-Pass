@@ -20,7 +20,7 @@ public class FileUtil
     */
    public static String[] readRecords(final String filename) throws Exception
    {
-      File file = new File("PumaPass/Saves/" + filename + ".dat");
+      File file = new File("Saves/" + filename + ".dat");
       Scanner fin = new Scanner(file);
       
       int recordCount = fin.nextInt();
@@ -42,7 +42,7 @@ public class FileUtil
     */
    public static void writeRecords(final String filename, final String[] data) throws Exception
    {
-      File file = new File("PumaPass/Saves/" + filename + ".dat");
+      File file = new File("Saves/" + filename + ".dat");
       PrintStream fin = new PrintStream(file);
       
       int recordCount = (data.length / 3);
@@ -62,22 +62,33 @@ public class FileUtil
     */
    public static String[] readSaveFilenames()
    {
-      ArrayList<String> saveList = new ArrayList<String>();
+	   String[] saves;
+       ArrayList<String> saveList = new ArrayList<String>();
       
-      File dir = new File("PumaPass/Saves/");
-      File[] list = dir.listFiles();
-      for (int x = 0; x < list.length; x++)
-      {
-         if (list[x].isFile() && list[x].getName().endsWith(".dat"))
-         {
-            saveList.add(list[x].getName());
-         }         
-      }
+       File dir = new File("Saves/");
+       if (dir.exists())
+       {
+    	  	File[] list = dir.listFiles();
+      		if (list.length == 0)
+      			return null;
       
-      String[] saves = new String[saveList.size()];
-      saves = saveList.toArray(saves);
-      
-      return saves;
+      		for (int x = 0; x < list.length; x++)
+      		{
+    	  		if (list[x].isFile() && list[x].getName().endsWith(".dat"))
+         		{
+        	 		saveList.add(list[x].getName());
+         		}         
+      		}
+      		
+      		saves = new String[saveList.size()];
+      		saves = saveList.toArray(saves);
+       }
+       else
+       {
+    	    dir.mkdir();
+    	  	saves = null;
+       }
+       return saves;
    }
    
    /**
@@ -87,7 +98,7 @@ public class FileUtil
     */
    public static boolean deleteFile(final String filename)
    {
-      File file = new File("PumaPass/Saves/" + filename + ".dat");
+      File file = new File("Saves/" + filename + ".dat");
       return file.delete();
    }
    

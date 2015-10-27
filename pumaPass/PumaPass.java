@@ -1,40 +1,32 @@
 package pumaPass;
 
 import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.SpringLayout;
-import javax.swing.JToolBar;
-import javax.swing.JPanel;
-import javax.swing.BorderFactory;
-import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
-import javax.swing.JList;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JPasswordField;
-import javax.swing.JButton;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JTextField;
-import java.awt.List;
-import javax.swing.JTable;
-import javax.swing.JScrollBar;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Font;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JRadioButtonMenuItem;
-import pumaPass.pumaUtils.*;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
+import java.awt.event.ActionListener;
 import java.awt.datatransfer.*;
 import java.awt.Toolkit;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
+
+import pumaPass.pumaUtils.Cryptor;
+import pumaPass.pumaUtils.FileUtil;
 
 public class PumaPass {
 
@@ -110,9 +102,12 @@ public class PumaPass {
 		panel.add(comboBox);
 		String[] profileNames = FileUtil.readSaveFilenames();
 		/// Populate comboBox with the names of the saves in the Saves sub-folder
-		for (int z = 0; z < profileNames.length; z++)
+		if (profileNames != null)
 		{
-			comboBox.addItem(profileNames[z].substring(0, profileNames[z].length() - 4));
+			for (int z = 0; z < profileNames.length; z++)
+			{
+				comboBox.addItem(profileNames[z].substring(0, profileNames[z].length() - 4));
+			}
 		}
 		
 		JLabel lblChooseProfile = new JLabel("Choose Profile");
@@ -193,6 +188,7 @@ public class PumaPass {
 		DefaultTableModel dtm = new DefaultTableModel(0, 0);
 		dtm.setColumnIdentifiers(columns);
 		table.setModel(dtm);
+		table.setCellSelectionEnabled(true);
 		for (int x = 0; x < 15; x++)
 		{
 			dtm.addRow(data[x]);
@@ -354,12 +350,47 @@ public class PumaPass {
 		
 		btnCopyToClipboard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//StringSelection stringSelection = new StringSelection(table.getSelectedRow());
+				boolean isselected = false;
+				for (int k = 0; k < dtm.getRowCount(); k++)
+				{
+					for (int j = 0; j < dtm.getColumnCount(); j++)
+					{
+						if (table.isCellSelected(k, j))
+							isselected = true;
+					}
+				}
 				
-				
+				if (isselected == true)
+				{
+					String selectedStr = (String)dtm.getValueAt(table.getSelectedRow(), table.getSelectedColumn());  
+					StringSelection stringSelection = new StringSelection(selectedStr);
+					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					clipboard.setContents(stringSelection, null);
+				}
 			}
 		}); // end btnCopyToClipboard action listener
 		
+		
+		btnCreate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		}); // end btnCreate action listener
+		
+		
+		/// Menu Bar Action Listeners
+		mntmExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		}); // end mntmExit action listener
+		
+		
+		mntmAbout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frmPumapassA, "                  Puma-Pass V0.00\n\u00a9 Chandler Underwood and Cody Machine\n          GNU GENERAL PUBLIC LICENSE", "About Puma-Pass", JOptionPane.INFORMATION_MESSAGE);
+			}
+		}); // end mntmAbout action listener
 		
 		
 	}
