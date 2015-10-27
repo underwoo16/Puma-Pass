@@ -35,6 +35,9 @@ public class PumaPass {
 	private JTextField textField;
 	private JPasswordField passwordField_1;
 	private JTable table;
+	private String[] profileNames;
+	private String curKey;
+	private String curProfSelected;
 
 	/**
 	 * Launch the application.
@@ -100,7 +103,7 @@ public class PumaPass {
 		JComboBox<String> comboBox = new JComboBox<>();
 		comboBox.setBounds(16, 38, 90, 20);
 		panel.add(comboBox);
-		String[] profileNames = FileUtil.readSaveFilenames();
+		profileNames = FileUtil.readSaveFilenames();
 		/// Populate comboBox with the names of the saves in the Saves sub-folder
 		if (profileNames != null)
 		{
@@ -253,9 +256,16 @@ public class PumaPass {
 		frmPumapassA.getContentPane().add(btnRemoveRow);
 		
 		JLabel lblCurrentProfileDisplayed = new JLabel("Current Profile Displayed  >  NONE");
+		curProfSelected = null;
 		springLayout.putConstraint(SpringLayout.NORTH, lblCurrentProfileDisplayed, 6, SpringLayout.SOUTH, panel_1);
 		springLayout.putConstraint(SpringLayout.WEST, lblCurrentProfileDisplayed, 0, SpringLayout.WEST, scrollPane);
 		frmPumapassA.getContentPane().add(lblCurrentProfileDisplayed);
+		
+		JButton btnSaveChanges = new JButton("Save Changes");
+		springLayout.putConstraint(SpringLayout.NORTH, btnSaveChanges, 6, SpringLayout.SOUTH, scrollPane);
+		springLayout.putConstraint(SpringLayout.WEST, btnSaveChanges, 6, SpringLayout.EAST, btnCopyToClipboard);
+		springLayout.putConstraint(SpringLayout.EAST, btnSaveChanges, -10, SpringLayout.WEST, btnRemoveRow);
+		frmPumapassA.getContentPane().add(btnSaveChanges);
 		
 		
 		/// Action Listeners
@@ -287,7 +297,8 @@ public class PumaPass {
 					// set the Cryptor's key
 					try
 					{
-						crypt.setKey(new String(passwordField.getPassword()));
+						curKey = new String(passwordField.getPassword());
+						crypt.setKey(curKey);
 					}
 					catch (Exception e3)
 					{
@@ -325,6 +336,7 @@ public class PumaPass {
 						}
 						// set current profile displayed
 						lblCurrentProfileDisplayed.setText("Current Profile Displayed  >  " + profName);
+						curProfSelected = profName;
 					} // end else - good pass key
 					
 				}
@@ -373,9 +385,183 @@ public class PumaPass {
 		
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				String newProf = textField.getText();
+				if (newProf == null || newProf.length() < 1)
+				{
+					JOptionPane.showMessageDialog(frmPumapassA, "You need to enter a profile name!", "WARNING - No Profile Entered", JOptionPane.WARNING_MESSAGE);
+				}
+				else
+				{
+					boolean isValid = FileUtil.checkValidFN(newProf);
+					boolean nameTaken = false;
+					for (int y = 0; y < profileNames.length; y++)
+					{
+						if (newProf.equalsIgnoreCase(profileNames[y]))
+							nameTaken = true;
+					}
+					if (isValid && !nameTaken)
+					{
+						// clear the table and setup some blank rows
+						int rows = dtm.getRowCount();
+						for (int g = 0; g < rows; g++)
+						{
+							dtm.removeRow(0);
+						}
+						String[] blankRow = {"", "", ""};
+						for (int k = 0; k < 12; k++)
+						{
+							dtm.addRow(blankRow);
+						}
+						// set the Cryptor key
+						try
+						{
+							curKey = new String(passwordField_1.getPassword());
+							crypt.setKey(curKey);
+						}
+						catch (Exception e3)
+						{
+							JOptionPane.showMessageDialog(frmPumapassA, "Cryptor failed to set new key!", "FATAL ERROR - Cryptor Failed", JOptionPane.ERROR_MESSAGE);
+							throw new RuntimeException("Cryptor failed to set new key!");
+						}
+						// set current profile displayed
+						lblCurrentProfileDisplayed.setText("Current Profile Displayed  >  " + newProf);
+						curProfSelected = newProf;
+					}
+					else if (!isValid)
+					{
+						JOptionPane.showMessageDialog(frmPumapassA, "You need to enter and alphanumeric profile name!", "WARNING - Invalid Profile Name", JOptionPane.WARNING_MESSAGE);
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(frmPumapassA, "That profile name already exist!", "WARNING - Invalid Profile Name", JOptionPane.WARNING_MESSAGE);
+					}
+				}
 			}
 		}); // end btnCreate action listener
+		
+		
+		btnSaveChanges.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (curProfSelected == null || curKey == null)
+				{
+					JOptionPane.showMessageDialog(frmPumapassA, "No profile selected! Please load or create profile first.", "WARNING - No Profile Selected", JOptionPane.WARNING_MESSAGE);
+				}
+				else if (table.getRowCount() == 0)
+				{
+					JOptionPane.showMessageDialog(frmPumapassA, "Table is empty! Table must have contents to save.", "WARNING - Empty Table", JOptionPane.WARNING_MESSAGE);
+				}
+				else
+				{
+					boolean isEmpty = true;
+					// check if the rows and cols are empty
+					for (int p = 0; p < table.getRowCount(); p++)
+					{
+						for (int q = 0; q < table.getColumnCount(); q++)
+						{
+							if (((String)table.getValueAt(p, q)).length() > 0)
+								isEmpty = false;
+						}
+					}
+					if (isEmpty)
+					{
+						JOptionPane.showMessageDialog(frmPumapassA, "Table is empty! Table must have contents to save.", "WARNING - Empty Table", JOptionPane.WARNING_MESSAGE);
+					}
+					else
+					{
+						// check for rows that are partially completed
+						boolean incompleteRows = false;
+						int validRows = 0;
+						for (int k = 0; k < table.getRowCount(); k++)
+						{
+							if ((((String)table.getValueAt(k, 0)).length() == 0) || (((String)table.getValueAt(k, 1)).length() == 0) || (((String)table.getValueAt(k, 2)).length() == 0))
+							{
+								incompleteRows = true;
+								if ((((String)table.getValueAt(k, 0)).length() == 0) && (((String)table.getValueAt(k, 1)).length() == 0) && (((String)table.getValueAt(k, 2)).length() == 0))
+								{
+									incompleteRows = false;
+								}
+							}
+							else
+							{
+								validRows++;
+							}
+						}
+						if (incompleteRows)
+						{
+							JOptionPane.showMessageDialog(frmPumapassA, "Table has incomplete rows! Table must have complete rows or empty rows.", "WARNING - Incomplete Rows", JOptionPane.WARNING_MESSAGE);
+						}
+						else
+						{
+							// set Cryptor key again for good measure - is it redundant? yeah probably, but I'm okay with that.
+							try
+							{
+								crypt.setKey(curKey);
+							}
+							catch (Exception e3)
+							{
+								JOptionPane.showMessageDialog(frmPumapassA, "Cryptor failed to set new key!", "FATAL ERROR - Cryptor Failed", JOptionPane.ERROR_MESSAGE);
+								throw new RuntimeException("Cryptor failed to set new key!");
+							}
+							// get strings from table
+							String[] dataToEncrypt = new String[validRows * 3];
+							int curCell = 0;
+							for (int y = 0; y < validRows; y++)
+							{
+								if ((((String)table.getValueAt(y, 0)).length() > 0) && (((String)table.getValueAt(y, 1)).length() > 0) && (((String)table.getValueAt(y, 2)).length() > 0))
+								{
+									for (int f = 0; f < 3; f++)
+									{
+										dataToEncrypt[curCell] = (String)table.getValueAt(y, f);
+										curCell++;
+									}
+								}
+							}
+							// encrypt table contents
+							String[] dataPostEncrypt;
+							try
+							{
+								dataPostEncrypt = crypt.encryptArray(dataToEncrypt);
+							}
+							catch (Exception e4)
+							{
+								JOptionPane.showMessageDialog(frmPumapassA, "Cryptor failed to encrypt data!", "FATAL ERROR - Cryptor Failed", JOptionPane.ERROR_MESSAGE);
+								throw new RuntimeException("Cryptor failed to encrypt data!");
+							}
+							// write encrypted String[] to file specified by curProfSelected
+							try
+							{
+								FileUtil.writeRecords(curProfSelected, dataPostEncrypt);
+							}
+							catch (Exception e5)
+							{
+								JOptionPane.showMessageDialog(frmPumapassA, "FileUtil failed to save data!", "FATAL ERROR - FileUtil Failed", JOptionPane.ERROR_MESSAGE);
+								throw new RuntimeException("FileUtil failed to save data!");
+							}
+							// add profile to profileNames
+							boolean alreadyAdded = false;
+							for (int x = 0; x < profileNames.length; x++)
+							{
+								if (curProfSelected.equalsIgnoreCase(profileNames[x]))
+									alreadyAdded = true;
+							}
+							if (!alreadyAdded)
+							{
+								String[] temp = new String[profileNames.length + 1];
+								for (int p = 0; p < profileNames.length; p++)
+								{
+									temp[p] = profileNames[p];
+								}
+								temp[temp.length - 1] = curProfSelected;
+								profileNames = temp;
+								// add profile to dropdown list
+								comboBox.addItem(curProfSelected);
+							}
+						}
+					}
+				}
+				
+			}
+		}); // end btnSaveChanges action listener
 		
 		
 		/// Menu Bar Action Listeners

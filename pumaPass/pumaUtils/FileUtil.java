@@ -4,10 +4,11 @@
 */
 package pumaPass.pumaUtils;
 
-
+import java.io.File;
 import java.io.*;
 //import java.nio.file.*;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 import java.util.ArrayList;
 
 public class FileUtil
@@ -100,6 +101,25 @@ public class FileUtil
    {
       File file = new File("Saves/" + filename + ".dat");
       return file.delete();
+   }
+   
+   /**
+    * Check if a profile name is valid. For the time being, only alphanumeric ASCII chars allowed.
+    * @param filename name to be chacked
+    * @return returns true if name is valid
+   */
+   public static boolean checkValidFN(final String newProf)
+   {
+	   Pattern pat = Pattern.compile("[^a-zA-Z0-9]");
+	   boolean temp = !(pat.matcher(newProf).find());
+	   
+	   for (int x = 0; x < newProf.length(); x++)
+	   {
+		   if (newProf.charAt(x) == ' ')
+			   temp = false;
+	   }
+	   
+	   return temp;
    }
    
 } // end class FileUtil
