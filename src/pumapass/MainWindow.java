@@ -26,6 +26,7 @@ public class MainWindow
 	 */
 	private JFrame frame;
 	private JTable table;
+	private Profile prof;
 	
 	/**
 	 * Other member variables
@@ -53,6 +54,7 @@ public class MainWindow
 	 */
 	public MainWindow()
 	{
+		this.setProfile();
 		initialize();
 	}
 
@@ -141,6 +143,14 @@ public class MainWindow
 	public void setVisible(Boolean bc)
 	{
 		frame.setVisible(bc);
+	}
+	
+	private void setProfile()
+	{
+		ProfileSelector ps = new ProfileSelector();
+		ps.setModal(true);
+		Profile prof = ps.showDialog();
+		this.prof = prof;
 	}
 
 }
